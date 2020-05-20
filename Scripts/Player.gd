@@ -4,6 +4,7 @@ const GRAVITY = 400
 const MAX_SPEED = 60
 const ACCELERATION = 20
 const JUMP_SPEED = 120
+const FALL_ANIMATION_THRESHOLD = 50
 
 const FLOOR_FRICTION_FACTOR = 0.3
 const AIR_FRICTION_FACTOR = 0.05
@@ -86,11 +87,11 @@ func _physics_process(delta):
 	else:
 		if friction:
 			motion.x = lerp(motion.x, 0, AIR_FRICTION_FACTOR)
-		
-		if motion.y <= 0:
-			play_or_continue("Jump")
-		else:
-			play_or_continue("Fall")
+		if abs(motion.y) > FALL_ANIMATION_THRESHOLD:
+			if motion.y <= 0:
+				play_or_continue("Jump")
+			else:
+				play_or_continue("Fall")
 		
 		if Input.is_action_just_released("jump") and motion.y <= 0:
 			motion.y *= LOW_JUMP_FACTOR

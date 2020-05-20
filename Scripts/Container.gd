@@ -4,9 +4,6 @@ var dimension_resources = preload("res://Resource/Dimension Resources.tres")
 
 export(String, FILE, "*.tscn") var world_file
 
-const PRIMARY_MODULATE = Color("a9a2ff");
-const SECONDARY_MODULATE = Color("ff849d");
-
 var sensitivity = 1
 
 func _ready():
@@ -77,9 +74,6 @@ func load_world_file(file : String):
 	scene.remove_child(subworld)
 	scene.remove_child(objects)
 	scene.queue_free() #!!! needs to be freed explicity to avoid leak?
-	
-	overworld.modulate = PRIMARY_MODULATE
-	subworld.modulate = SECONDARY_MODULATE
 	
 	dimension_resources.overworld_tree = overworld
 	dimension_resources.subworld_tree = subworld

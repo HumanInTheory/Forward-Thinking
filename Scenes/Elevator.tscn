@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Resource/GenericTileset.tres" type="TileSet" id=1]
+[ext_resource path="res://Scenes/Elevator.gd" type="Script" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 22, 4 )
+
+[node name="Elevator" type="TileMap"]
+position = Vector2( 257, 92 )
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 4, 4 )
+collision_use_kinematic = true
+format = 1
+tile_data = PoolIntArray( 65531, 10, 0, 65532, 10, 65536, 65533, 10, 65536, 65534, 10, 65536, 65535, 10, 65536, 0, 10, 65536, 1, 10, 65536, 2, 10, 65536, 3, 10, 65536, 4, 10, 65536, 5, 10, 131072 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+height = 50.0
+
+[node name="DetectionArea" type="Area2D" parent="."]
+position = Vector2( 2, 0 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2( 0, -4 )
+shape = SubResource( 1 )
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_DetectionArea_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_DetectionArea_body_exited"]

@@ -13,7 +13,7 @@
 viewport_path = NodePath("CompositedViewport")
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 10, 58 )
+extents = Vector2( 10, 70 )
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 100, 10 )
@@ -31,6 +31,8 @@ viewport_path = NodePath("WorldViewport")
 resource_local_to_scene = true
 shader = ExtResource( 4 )
 shader_param/viewportSize = Vector2( 192, 108 )
+shader_param/worldModulate = Color( 0.662745, 0.635294, 1, 1 )
+shader_param/subworldModulate = Color( 1, 0.517647, 0.615686, 1 )
 shader_param/portalMask = SubResource( 4 )
 shader_param/worldView = SubResource( 6 )
 shader_param/subworldView = SubResource( 5 )
@@ -82,7 +84,7 @@ __meta__ = {
 shape = SubResource( 2 )
 
 [node name="MoveMinusY" type="Area2D" parent="MainCamera"]
-position = Vector2( 96, -14 )
+position = Vector2( 96, -26 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -91,7 +93,7 @@ __meta__ = {
 shape = SubResource( 3 )
 
 [node name="MovePlusY" type="Area2D" parent="MainCamera"]
-position = Vector2( 96, 122 )
+position = Vector2( 96, 134 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -281,7 +283,6 @@ script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="moved" from="MainCamera" to="." method="_on_MainCamera_moved"]
 [connection signal="body_entered" from="MainCamera/MoveMinusX" to="MainCamera" method="_on_MoveMinusX_body_entered"]
 [connection signal="body_entered" from="MainCamera/MovePlusX" to="MainCamera" method="_on_MovePlusX_body_entered"]
 [connection signal="body_entered" from="MainCamera/MoveMinusY" to="MainCamera" method="_on_MoveMinusY_body_entered"]

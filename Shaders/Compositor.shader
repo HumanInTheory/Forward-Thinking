@@ -1,6 +1,8 @@
 shader_type canvas_item;
 
 uniform vec2 viewportSize = vec2(192., 108.);
+uniform vec4 worldModulate : hint_color;
+uniform vec4 subworldModulate : hint_color;
 
 uniform sampler2D portalMask;
 uniform sampler2D worldView;
@@ -17,8 +19,8 @@ bool onMaskOutline(vec2 uv) {
 }
 
 void fragment() {
-	vec4 worldColor = texture(worldView, UV);
-	vec4 subworldColor = texture(subworldView, UV);
+	vec4 worldColor = texture(worldView, UV) * worldModulate;
+	vec4 subworldColor = texture(subworldView, UV) * subworldModulate;
 	vec4 mask = texture(portalMask, UV);
 	
 	vec4 color = mix(worldColor, subworldColor, mask.a);

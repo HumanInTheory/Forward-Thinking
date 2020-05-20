@@ -113,5 +113,5 @@ threads/thread_model=2
 quality/shading/force_vertex_shading=true
 quality/shading/force_lambert_over_burley=true
 quality/filters/use_nearest_mipmap_filter=true
-environment/default_clear_color=Color( 0.639216, 0.639216, 0.639216, 1 )
+environment/default_clear_color=Color( 0.356863, 0.356863, 0.356863, 1 )
 quality/depth/hdr=false
