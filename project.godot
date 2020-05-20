@@ -18,6 +18,10 @@ _global_script_class_icons={
 config/name="Forward Thinking"
 run/main_scene="res://Scenes/Container.tscn"
 
+[audio]
+
+default_bus_layout=""
+
 [debug]
 
 settings/stdout/verbose_stdout=true
@@ -36,6 +40,11 @@ window/size/test_width=1280
 window/size/test_height=720
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
+
+[gui]
+
+theme/custom="res://Resource/DefaultTheme.tres"
+theme/custom_font="res://Resource/PixelFont.tres"
 
 [importer_defaults]
 
