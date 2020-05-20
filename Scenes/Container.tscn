@@ -1,0 +1,281 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Resource/world.tres" type="World" id=1]
+[ext_resource path="res://Scenes/MainCamera.gd" type="Script" id=2]
+[ext_resource path="res://Sounds/music.ogg" type="AudioStream" id=3]
+[ext_resource path="res://Shaders/Compositor.shader" type="Shader" id=4]
+[ext_resource path="res://Scenes/Portal.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scripts/Container.gd" type="Script" id=6]
+[ext_resource path="res://Scenes/PauseMenu.gd" type="Script" id=7]
+
+[sub_resource type="ViewportTexture" id=8]
+viewport_path = NodePath("CompositedViewport")
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 10, 58 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 100, 10 )
+
+[sub_resource type="ViewportTexture" id=4]
+viewport_path = NodePath("PortalMaskViewport")
+
+[sub_resource type="ViewportTexture" id=5]
+viewport_path = NodePath("SubworldViewport")
+
+[sub_resource type="ViewportTexture" id=6]
+viewport_path = NodePath("WorldViewport")
+
+[sub_resource type="ShaderMaterial" id=7]
+resource_local_to_scene = true
+shader = ExtResource( 4 )
+shader_param/viewportSize = Vector2( 192, 108 )
+shader_param/portalMask = SubResource( 4 )
+shader_param/worldView = SubResource( 6 )
+shader_param/subworldView = SubResource( 5 )
+
+[node name="Container" type="Node2D"]
+script = ExtResource( 6 )
+world_file = "res://Scenes/NewWorld.tscn"
+
+[node name="MainCamera" type="Camera2D" parent="." groups=[
+"linked_cameras",
+]]
+offset = Vector2( 96, 54 )
+current = true
+script = ExtResource( 2 )
+
+[node name="Control" type="Control" parent="MainCamera"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="MainCamera/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1.0
+margin_right = 191.0
+margin_bottom = 108.0
+texture = SubResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MoveMinusX" type="Area2D" parent="MainCamera"]
+position = Vector2( -14, 54 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainCamera/MoveMinusX"]
+shape = SubResource( 2 )
+
+[node name="MovePlusX" type="Area2D" parent="MainCamera"]
+position = Vector2( 206, 54 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainCamera/MovePlusX"]
+shape = SubResource( 2 )
+
+[node name="MoveMinusY" type="Area2D" parent="MainCamera"]
+position = Vector2( 96, -14 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainCamera/MoveMinusY"]
+shape = SubResource( 3 )
+
+[node name="MovePlusY" type="Area2D" parent="MainCamera"]
+position = Vector2( 96, 122 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainCamera/MovePlusY"]
+position = Vector2( 0, 3.8147e-06 )
+shape = SubResource( 3 )
+
+[node name="Objects" type="Node2D" parent="."]
+
+[node name="PortalMaskViewport" type="Viewport" parent="."]
+size = Vector2( 192, 108 )
+transparent_bg = true
+usage = 1
+render_target_v_flip = true
+render_target_update_mode = 3
+physics_object_picking = true
+
+[node name="Portal" parent="PortalMaskViewport" instance=ExtResource( 5 )]
+
+[node name="Camera" type="Camera2D" parent="PortalMaskViewport" groups=[
+"linked_cameras",
+]]
+offset = Vector2( 96, 54 )
+current = true
+
+[node name="WorldViewport" type="Viewport" parent="."]
+size = Vector2( 192, 108 )
+own_world = true
+world = ExtResource( 1 )
+hdr = false
+disable_3d = true
+usage = 1
+render_target_v_flip = true
+render_target_update_mode = 3
+physics_object_picking = true
+
+[node name="Camera" type="Camera2D" parent="WorldViewport" groups=[
+"linked_cameras",
+]]
+offset = Vector2( 96, 54 )
+current = true
+
+[node name="SubworldViewport" type="Viewport" parent="."]
+size = Vector2( 192, 108 )
+own_world = true
+world = ExtResource( 1 )
+hdr = false
+disable_3d = true
+usage = 1
+render_target_v_flip = true
+render_target_update_mode = 3
+physics_object_picking = true
+
+[node name="Camera" type="Camera2D" parent="SubworldViewport" groups=[
+"linked_cameras",
+]]
+offset = Vector2( 96, 54 )
+current = true
+
+[node name="CompositedViewport" type="Viewport" parent="."]
+size = Vector2( 192, 108 )
+hdr = false
+disable_3d = true
+usage = 1
+render_target_v_flip = true
+
+[node name="Compositor" type="ColorRect" parent="CompositedViewport"]
+material = SubResource( 7 )
+margin_right = 192.0
+margin_bottom = 108.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
+stream = ExtResource( 3 )
+volume_db = -10.0
+autoplay = true
+
+[node name="PauseCanvas" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" type="Control" parent="PauseCanvas"]
+pause_mode = 2
+margin_right = 192.0
+margin_bottom = 108.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="PauseCanvas/PauseMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PauseCanvas/PauseMenu/CenterContainer"]
+margin_left = 29.0
+margin_top = 18.0
+margin_right = 163.0
+margin_bottom = 90.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer"]
+margin_right = 64.0
+margin_bottom = 72.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Padding2" type="Control" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+margin_right = 64.0
+margin_bottom = 5.0
+size_flags_vertical = 3
+
+[node name="Resume" type="Button" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+margin_top = 9.0
+margin_right = 64.0
+margin_bottom = 29.0
+text = "Resume"
+
+[node name="Padding3" type="Control" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+margin_top = 33.0
+margin_right = 64.0
+margin_bottom = 38.0
+size_flags_vertical = 3
+
+[node name="Quit" type="Button" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+margin_top = 42.0
+margin_right = 64.0
+margin_bottom = 62.0
+text = "Quit"
+
+[node name="Padding" type="Control" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+margin_top = 66.0
+margin_right = 64.0
+margin_bottom = 72.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer"]
+margin_left = 68.0
+margin_right = 134.0
+margin_bottom = 72.0
+alignment = 1
+
+[node name="Label" type="Label" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
+margin_right = 66.0
+margin_bottom = 14.0
+text = "Sensitivity"
+align = 1
+
+[node name="Sensitivity" type="HSlider" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 18.0
+margin_right = 66.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+min_value = 0.1
+max_value = 1.9
+step = 0.1
+value = 1.0
+
+[node name="Label2" type="Label" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 38.0
+margin_right = 66.0
+margin_bottom = 52.0
+text = "Volume"
+align = 1
+
+[node name="VolumeSlider" type="HSlider" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 56.0
+margin_right = 66.0
+margin_bottom = 72.0
+size_flags_horizontal = 3
+min_value = -50.0
+max_value = 0.0
+value = -10.0
+[connection signal="moved" from="MainCamera" to="." method="_on_MainCamera_moved"]
+[connection signal="body_entered" from="MainCamera/MoveMinusX" to="MainCamera" method="_on_MoveMinusX_body_entered"]
+[connection signal="body_entered" from="MainCamera/MovePlusX" to="MainCamera" method="_on_MovePlusX_body_entered"]
+[connection signal="body_entered" from="MainCamera/MoveMinusY" to="MainCamera" method="_on_MoveMinusY_body_entered"]
+[connection signal="body_entered" from="MainCamera/MovePlusY" to="MainCamera" method="_on_MovePlusY_body_entered"]
+[connection signal="pressed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Resume" to="PauseCanvas/PauseMenu" method="_on_Resume_pressed"]
+[connection signal="pressed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Quit" to="PauseCanvas/PauseMenu" method="_on_Quit_pressed"]
+[connection signal="value_changed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2/Sensitivity" to="PauseCanvas/PauseMenu" method="_on_Sensitivity_value_changed"]
+[connection signal="value_changed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2/VolumeSlider" to="PauseCanvas/PauseMenu" method="_on_VolumeSlider_value_changed"]
