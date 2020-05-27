@@ -12,7 +12,12 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	call_deferred("load_world_file", world_file)
 	
-func move_portal(portal_pos : Vector2):
+func _on_Portal_portal_changed():
+	var portal = dimension_resources.portal
+	if portal != null:
+		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
+
+func do_portal_tiles(radius, position):
 	var collision_map = dimension_resources.collision_map
 	var overworld_map = dimension_resources.overworld_map
 	var subworld_map = dimension_resources.subworld_map
@@ -21,8 +26,6 @@ func move_portal(portal_pos : Vector2):
 		print("maps not found!")
 		return
 	
-	var portal = dimension_resources.portal
-	
 	collision_map.clear()
 	
 	var used_rect = overworld_map.get_used_rect()
@@ -30,12 +33,17 @@ func move_portal(portal_pos : Vector2):
 		for j in range(used_rect.position.y, used_rect.end.y):
 			collision_map.set_cell(i, j, overworld_map.get_cell(i, j))
 	
-	for i in range(portal_pos.x - portal.radius, portal_pos.x + portal.radius, 4):
-		for j in range(portal_pos.y - portal.radius, portal_pos.y + portal.radius, 4):
-			if sq(i - portal_pos.x) + sq(j - portal_pos.y) <= sq(portal.radius):
+	if radius < 4:
+		return
+	
+	for i in range(position.x - radius, position.x + radius, 4):
+		for j in range(position.y - radius, position.y + radius, 4):
+			if sq(i - position.x) + sq(j - position.y) <= sq(radius):
 				var tile_coords = collision_map.world_to_map(Vector2(i,j))
 				collision_map.set_cellv(tile_coords, subworld_map.get_cellv(tile_coords))
-				
+	
+	collision_map.update_dirty_quadrants()
+
 func sq(v):
 	return v * v
 
@@ -49,11 +57,9 @@ func _input(event):
 			new_pos.y = clamp(new_pos.y, camera_pos.y, camera_pos.y + 108)
 			
 			portal.portal_position = new_pos
-			call_deferred("move_portal", portal.portal_position)
 	elif event is InputEventMouseButton:
 		var portal = dimension_resources.portal
 		if portal:
-			print("transitioning...")
 			portal.transition_radius(25 if event.pressed else 0)
 	if Input.is_action_just_pressed("exit"):
 		pause()
@@ -80,14 +86,10 @@ func _on_Fragment_collected():
 	print("coin noises")
 
 func prepare_objects():
-	print("Preparing objects")
-	move_portal(Vector2(0,0))
-	
 	var player = Player.instance()
 	$Objects.add_child(player)
 	
 	var barrel_path = dimension_resources.get_barrel()
-	
 	var barrel = get_tree().get_root().get_node(barrel_path)
 	
 	if player != null:
@@ -97,6 +99,11 @@ func prepare_objects():
 		else:
 			print("No barrel found!")
 		$MainCamera.set_position_rounded(player.global_position)
+	
+	var portal = dimension_resources.portal
+	if portal != null:
+		portal.connect("portal_changed", self, "_on_Portal_portal_changed")
+		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
 	
 	for fragment in get_tree().get_nodes_in_group("fragments"):
 		fragment.connect("collected", self, "_on_Fragment_collected")

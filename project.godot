@@ -99,10 +99,6 @@ exit={
 
 locale_filter=[ 0, [ "hus_MX" ] ]
 
-[physics]
-
-2d/thread_model=2
-
 [rendering]
 
 quality/intended_usage/framebuffer_allocation=1
