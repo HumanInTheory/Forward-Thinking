@@ -1,13 +1,13 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Resource/StyeboxEmpty.tres" type="StyleBox" id=1]
 [ext_resource path="res://Scripts/MainCamera.gd" type="Script" id=2]
 [ext_resource path="res://Sounds/music.ogg" type="AudioStream" id=3]
 [ext_resource path="res://Shaders/Compositor.shader" type="Shader" id=4]
-[ext_resource path="res://Scenes/Portal.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scripts/Container.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/PauseMenu.gd" type="Script" id=7]
-[ext_resource path="res://Scenes/RichTextURL.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/RichTextURL.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/Fade.gd" type="Script" id=9]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("CompositedViewport")
@@ -37,6 +37,62 @@ shader_param/portalMask = SubResource( 4 )
 shader_param/worldView = SubResource( 6 )
 shader_param/subworldView = SubResource( 5 )
 
+[sub_resource type="Animation" id=8]
+resource_name = "Fade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "Unfade"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
 [node name="Container" type="Node2D"]
 script = ExtResource( 6 )
 world_file = "res://Scenes/NewWorld.tscn"
@@ -65,7 +121,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MoveMinusX" type="Area2D" parent="MainCamera"]
+[node name="MoveMinusX" type="Area2D" parent="MainCamera" groups=[
+"move_area",
+]]
 position = Vector2( -14, 54 )
 __meta__ = {
 "_edit_group_": true
@@ -74,7 +132,9 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MainCamera/MoveMinusX"]
 shape = SubResource( 2 )
 
-[node name="MovePlusX" type="Area2D" parent="MainCamera"]
+[node name="MovePlusX" type="Area2D" parent="MainCamera" groups=[
+"move_area",
+]]
 position = Vector2( 206, 54 )
 __meta__ = {
 "_edit_group_": true
@@ -83,7 +143,9 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MainCamera/MovePlusX"]
 shape = SubResource( 2 )
 
-[node name="MoveMinusY" type="Area2D" parent="MainCamera"]
+[node name="MoveMinusY" type="Area2D" parent="MainCamera" groups=[
+"move_area",
+]]
 position = Vector2( 96, -26 )
 __meta__ = {
 "_edit_group_": true
@@ -92,7 +154,9 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MainCamera/MoveMinusY"]
 shape = SubResource( 3 )
 
-[node name="MovePlusY" type="Area2D" parent="MainCamera"]
+[node name="MovePlusY" type="Area2D" parent="MainCamera" groups=[
+"move_area",
+]]
 position = Vector2( 96, 134 )
 __meta__ = {
 "_edit_group_": true
@@ -111,8 +175,6 @@ usage = 1
 render_target_v_flip = true
 render_target_update_mode = 3
 physics_object_picking = true
-
-[node name="Portal" parent="PortalMaskViewport" instance=ExtResource( 5 )]
 
 [node name="Camera" type="Camera2D" parent="PortalMaskViewport" groups=[
 "linked_cameras",
@@ -169,11 +231,31 @@ __meta__ = {
 pause_mode = 2
 stream = ExtResource( 3 )
 volume_db = -10.0
-autoplay = true
 
-[node name="PauseCanvas" type="CanvasLayer" parent="."]
+[node name="GUICanvas" type="CanvasLayer" parent="."]
 
-[node name="PauseMenu" type="Control" parent="PauseCanvas"]
+[node name="DeathFade" type="Control" parent="GUICanvas"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="GUICanvas/DeathFade"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GUICanvas/DeathFade"]
+anims/Fade = SubResource( 8 )
+anims/Unfade = SubResource( 9 )
+
+[node name="PauseMenu" type="Control" parent="GUICanvas"]
 pause_mode = 2
 visible = false
 margin_right = 192.0
@@ -183,7 +265,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="PauseCanvas/PauseMenu"]
+[node name="ColorRect" type="ColorRect" parent="GUICanvas/PauseMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.501961 )
@@ -191,85 +273,82 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="PauseCanvas/PauseMenu"]
+[node name="CenterContainer" type="CenterContainer" parent="GUICanvas/PauseMenu"]
 margin_right = 192.0
 margin_bottom = 84.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PauseCanvas/PauseMenu/CenterContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GUICanvas/PauseMenu/CenterContainer"]
 margin_left = 22.0
 margin_top = 14.0
 margin_right = 170.0
 margin_bottom = 70.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer"]
-margin_right = 89.0
-margin_bottom = 64.0
+[node name="VBoxContainer" type="VBoxContainer" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer"]
+margin_right = 72.0
+margin_bottom = 56.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
-[node name="Resume" type="Button" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
-margin_right = 89.0
+[node name="Resume" type="Button" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+margin_right = 72.0
 margin_bottom = 16.0
 text = "Resume"
 
-[node name="Quit" type="Button" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="Quit" type="Button" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
 margin_top = 20.0
-margin_right = 89.0
+margin_right = 72.0
 margin_bottom = 36.0
 text = "Quit"
 
-[node name="Fullscreen" type="CheckBox" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
+[node name="Fullscreen" type="CheckBox" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer"]
 margin_top = 40.0
-margin_right = 89.0
-margin_bottom = 64.0
-focus_mode = 0
-enabled_focus_mode = 0
+margin_right = 72.0
+margin_bottom = 56.0
 text = "Fullscreen"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer"]
-margin_left = 93.0
-margin_right = 165.0
-margin_bottom = 64.0
+[node name="VBoxContainer2" type="VBoxContainer" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer"]
+margin_left = 76.0
+margin_right = 148.0
+margin_bottom = 56.0
 alignment = 1
 
-[node name="Label" type="Label" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
-margin_top = 4.0
+[node name="Label" type="Label" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
 margin_right = 72.0
-margin_bottom = 20.0
+margin_bottom = 16.0
 text = "Sensitivity"
 align = 1
 
-[node name="MouseSensitivity" type="HSlider" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
-margin_top = 24.0
+[node name="MouseSensitivity" type="HSlider" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 20.0
 margin_right = 72.0
-margin_bottom = 30.0
+margin_bottom = 26.0
 size_flags_horizontal = 3
 min_value = 0.1
 max_value = 1.9
 step = 0.1
 value = 1.0
 
-[node name="Label2" type="Label" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
-margin_top = 34.0
+[node name="Label2" type="Label" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 30.0
 margin_right = 72.0
-margin_bottom = 50.0
+margin_bottom = 46.0
 text = "Volume"
 align = 1
 
-[node name="VolumeSlider" type="HSlider" parent="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
-margin_top = 54.0
+[node name="VolumeSlider" type="HSlider" parent="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 50.0
 margin_right = 72.0
-margin_bottom = 60.0
+margin_bottom = 56.0
 size_flags_horizontal = 3
 min_value = -50.0
 max_value = 0.0
 value = -10.0
 
-[node name="Credits" type="RichTextLabel" parent="PauseCanvas/PauseMenu"]
+[node name="Credits" type="RichTextLabel" parent="GUICanvas/PauseMenu"]
 margin_left = 2.0
 margin_top = 86.0
 margin_right = 190.0
@@ -289,9 +368,10 @@ __meta__ = {
 [connection signal="body_entered" from="MainCamera/MovePlusX" to="MainCamera" method="_on_MovePlusX_body_entered"]
 [connection signal="body_entered" from="MainCamera/MoveMinusY" to="MainCamera" method="_on_MoveMinusY_body_entered"]
 [connection signal="body_entered" from="MainCamera/MovePlusY" to="MainCamera" method="_on_MovePlusY_body_entered"]
-[connection signal="pressed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Resume" to="PauseCanvas/PauseMenu" method="_on_Resume_pressed"]
-[connection signal="pressed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Quit" to="PauseCanvas/PauseMenu" method="_on_Quit_pressed"]
-[connection signal="toggled" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Fullscreen" to="PauseCanvas/PauseMenu" method="_on_Fullscreen_toggled"]
-[connection signal="value_changed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2/MouseSensitivity" to="PauseCanvas/PauseMenu" method="_on_Sensitivity_value_changed"]
-[connection signal="value_changed" from="PauseCanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2/VolumeSlider" to="PauseCanvas/PauseMenu" method="_on_VolumeSlider_value_changed"]
-[connection signal="meta_clicked" from="PauseCanvas/PauseMenu/Credits" to="PauseCanvas/PauseMenu/Credits" method="_on_Credits_meta_clicked"]
+[connection signal="animation_finished" from="GUICanvas/DeathFade/AnimationPlayer" to="GUICanvas/DeathFade" method="_on_AnimationPlayer_animation_finished"]
+[connection signal="pressed" from="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Resume" to="GUICanvas/PauseMenu" method="_on_Resume_pressed"]
+[connection signal="pressed" from="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Quit" to="GUICanvas/PauseMenu" method="_on_Quit_pressed"]
+[connection signal="toggled" from="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer/Fullscreen" to="GUICanvas/PauseMenu" method="_on_Fullscreen_toggled"]
+[connection signal="value_changed" from="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2/MouseSensitivity" to="GUICanvas/PauseMenu" method="_on_Sensitivity_value_changed"]
+[connection signal="value_changed" from="GUICanvas/PauseMenu/CenterContainer/HBoxContainer/VBoxContainer2/VolumeSlider" to="GUICanvas/PauseMenu" method="_on_VolumeSlider_value_changed"]
+[connection signal="meta_clicked" from="GUICanvas/PauseMenu/Credits" to="GUICanvas/PauseMenu/Credits" method="_on_Credits_meta_clicked"]

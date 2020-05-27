@@ -4,10 +4,20 @@ var dimension_resources = preload("res://Resource/Dimension Resources.tres")
 
 onready var trail : CPUParticles2D = $Trail
 
-const RADIUS = 25
+const TWEEN_TIME = 0.5
+
+var radius : float = 25 setget set_radius
+
 const COLLISION_RADIUS_BIAS = 5
 
-const COLLISION_RADIUS = RADIUS + COLLISION_RADIUS_BIAS
+func transition_radius(value : float):
+	print("Transitioning to radius %f" % value)
+	$Tween.interpolate_method(self, "set_radius", radius, value, TWEEN_TIME, Tween.TRANS_EXPO)
+	$Tween.start()
+
+func set_radius(value : float):
+	radius = value
+	scale = Vector2(radius/25, radius/25)
 
 var portal_position : Vector2 setget set_position
 
@@ -19,6 +29,7 @@ func _exit_tree():
 
 func set_position(new_pos : Vector2):
 	portal_position = new_pos
-	position = portal_position
+	scale = Vector2(radius/25, radius/25)
+	global_position = portal_position
 	trail.one_shot = true
 	trail.emitting = true

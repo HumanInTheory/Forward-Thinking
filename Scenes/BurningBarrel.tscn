@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Textures/GenericTiles.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/BurningBarrel.gd" type="Script" id=2]
 
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
@@ -8,16 +9,14 @@ _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 2, 3 )
 
-[node name="Barrel" type="RigidBody2D" groups=[
+[node name="Barrel" type="Area2D" groups=[
 "player_pushable",
 ]]
-can_sleep = false
-__meta__ = {
-"_edit_group_": true
-}
+script = ExtResource( 2 )
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 position = Vector2( 0, -3 )
+emitting = false
 explosiveness = 0.1
 randomness = 0.93
 local_coords = false
@@ -36,3 +35,7 @@ region_rect = Rect2( 16, 22, 4, 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
+
+[node name="SpawnPosition" type="Position2D" parent="."]
+position = Vector2( -6, 0 )
+[connection signal="body_entered" from="." to="." method="_on_Barrel_body_entered"]

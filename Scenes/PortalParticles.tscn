@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Textures/Circle.png" type="Texture" id=1]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0.0337553, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.514768, 0.845455 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0.0506329, 0.0545454 ), 0.0, 0.0, 0, 0, Vector2( 0.506329, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.118182 ), 0.0, 0.0, 0, 0 ]
+
+[node name="PortalParticles" type="Node2D"]
+
+[node name="Bumps" type="CPUParticles2D" parent="."]
+amount = 20
+texture = ExtResource( 1 )
+emission_shape = 1
+emission_sphere_radius = 25.0
+gravity = Vector2( 0, 0 )
+angular_velocity_random = 1.0
+orbit_velocity = -0.1
+orbit_velocity_random = 1.0
+scale_amount = 0.2
+scale_amount_curve = SubResource( 1 )
+
+[node name="Particles" type="CPUParticles2D" parent="."]
+texture = ExtResource( 1 )
+emission_shape = 1
+emission_sphere_radius = 40.0
+gravity = Vector2( 0, 0 )
+orbit_velocity = 0.1
+orbit_velocity_random = 1.0
+scale_amount = 0.1
+scale_amount_curve = SubResource( 2 )

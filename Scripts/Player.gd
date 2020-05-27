@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+var dimension_resources = preload("res://Resource/Dimension Resources.tres")
+
 const GRAVITY = 400
 const MAX_SPEED = 60
 const ACCELERATION = 20
@@ -30,6 +32,18 @@ var jump_buffer : float = 0
 
 onready var sprite : Sprite = $Sprite;
 onready var animation_player : AnimationPlayer = $AnimationPlayer;
+
+signal death_area_entered(area)
+
+func death_area_entered(area):
+	print("death area entered")
+	emit_signal("death_area_entered", area)
+
+func _ready():
+	dimension_resources.player = self
+
+func _exit_tree():
+	dimension_resources.player = null
 
 func play_or_continue(anim : String, speed : float = 1):
 	animation_player.current_animation = anim
@@ -109,3 +123,6 @@ func _physics_process(delta):
 		if collision.collider.is_in_group("player_pushable"):
 			var push_strength = last_impulse.dot(-collision.normal)
 			collision.collider.apply_central_impulse(-collision.normal * push_strength * RIGID_BODY_PUSH_FACTOR)
+
+func respawn():
+	print("respawn!")

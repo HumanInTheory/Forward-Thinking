@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/CityTiles.png-b22849dc2c8c818f5d69a692f29ca9d3.stex"
+path="res://.import/BlackToTransparentGradient.png-5f1202659f946b0dbadd3783013b6f3f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/CityTiles.png"
-dest_files=[ "res://.import/CityTiles.png-b22849dc2c8c818f5d69a692f29ca9d3.stex" ]
+source_file="res://Textures/BlackToTransparentGradient.png"
+dest_files=[ "res://.import/BlackToTransparentGradient.png-5f1202659f946b0dbadd3783013b6f3f.stex" ]
 
 [params]
 

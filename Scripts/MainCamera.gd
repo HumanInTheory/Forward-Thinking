@@ -1,10 +1,23 @@
 extends Camera2D
 
+var locked : bool setget set_locked
 
 signal moved(new_pos)
 
 func _ready():
 	pass # Replace with function body.
+
+func set_position_rounded(pos : Vector2):
+	var screen_pos = pos / Vector2(192, 108)
+	screen_pos = screen_pos.floor()
+	
+	pos = screen_pos * Vector2(192, 108)
+	
+	set_camera_pos(pos)
+	
+func set_locked(value):
+	for area in get_tree().get_nodes_in_group("move_area"):
+		area.monitoring = !value
 
 func get_camera_pos() -> Vector2:
 	return self.global_position
