@@ -124,5 +124,7 @@ func _physics_process(delta):
 			var push_strength = last_impulse.dot(-collision.normal)
 			collision.collider.apply_central_impulse(-collision.normal * push_strength * RIGID_BODY_PUSH_FACTOR)
 
-func respawn():
-	print("respawn!")
+func respawn(position: Vector2):
+	global_position = position
+	motion = Vector2(0,0)
+	last_impulse = Vector2(0,0)

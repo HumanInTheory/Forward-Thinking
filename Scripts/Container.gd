@@ -14,7 +14,7 @@ func _ready():
 	
 func _on_Portal_portal_changed():
 	var portal = dimension_resources.portal
-	if portal != null:
+	if portal != null and portal.radius > 0:
 		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
 
 func do_portal_tiles(radius, position):
@@ -75,11 +75,20 @@ func resume():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 func player_died(_area):
+	$MainCamera.set_locked(true)
 	var fade = $GUICanvas/DeathFade
 	fade.fade()
+	
 	yield(fade, "finished")
+	
 	var player = dimension_resources.player
-	player.respawn()
+	var barrel_path = dimension_resources.get_barrel()
+	var barrel = get_tree().get_root().get_node(barrel_path)
+	
+	if barrel:
+		player.respawn(barrel.get_spawn_position())
+		$MainCamera.set_position_rounded(barrel.get_spawn_position())
+	$MainCamera.set_locked(false)
 	fade.unfade()
 
 func _on_Fragment_collected():

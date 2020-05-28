@@ -57,6 +57,7 @@ format = 1
 
 [node name="DeathArea" parent="Objects" instance=ExtResource( 1 )]
 position = Vector2( 300.69, 100.004 )
+scale = Vector2( 2.884, 1 )
 
 [node name="Elevator" parent="Objects" instance=ExtResource( 5 )]
 position = Vector2( 404, 81 )

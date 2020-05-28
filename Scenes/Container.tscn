@@ -39,7 +39,6 @@ shader_param/subworldView = SubResource( 5 )
 
 [sub_resource type="Animation" id=8]
 resource_name = "Fade"
-length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("ColorRect:self_modulate")
 tracks/0/interp = 1
