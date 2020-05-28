@@ -1,17 +1,21 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scripts/Portal.gd" type="Script" id=1]
 [ext_resource path="res://Textures/Circle.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/PortalParticles.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Textures/Pointer.png" type="Texture" id=4]
 
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0.0801688, 1 ), 0.0, -1.08716, 0, 1, Vector2( 1, 0 ), -1.08716, 0.0, 1, 0 ]
 
-[node name="Portal" type="Node2D"]
+[node name="Portal" type="Sprite"]
 self_modulate = Color( 0.278431, 0.0862745, 0.0862745, 1 )
+texture = ExtResource( 4 )
 script = ExtResource( 1 )
 
-[node name="Trail" type="CPUParticles2D" parent="."]
+[node name="PortalGraphics" type="Node2D" parent="."]
+
+[node name="Trail" type="CPUParticles2D" parent="PortalGraphics"]
 modulate = Color( 0.611765, 0.160784, 0.160784, 1 )
 emitting = false
 amount = 10
@@ -23,9 +27,9 @@ texture = ExtResource( 2 )
 gravity = Vector2( 0, 0 )
 scale_amount_curve = SubResource( 1 )
 
-[node name="PortalCenter" type="Sprite" parent="."]
+[node name="PortalCenter" type="Sprite" parent="PortalGraphics"]
 texture = ExtResource( 2 )
 
-[node name="PortalParticles" parent="." instance=ExtResource( 3 )]
+[node name="PortalParticles" parent="PortalGraphics" instance=ExtResource( 3 )]
 
 [node name="Tween" type="Tween" parent="."]

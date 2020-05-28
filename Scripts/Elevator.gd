@@ -19,10 +19,11 @@ func _physics_process(delta):
 	
 	position = lerp(start_position, end_position, progress)
 
-func _on_DetectionArea_body_entered(body):
+func _on_Elevator_body_entered(body):
 	if body.name == "Player":
 		moving = true
 
-func _on_DetectionArea_body_exited(body):
+
+func _on_Elevator_body_exited(body):
 	if body.name == "Player":
 		moving = false

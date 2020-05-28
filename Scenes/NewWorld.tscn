@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scenes/DeathArea.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resource/GenericTileset.tres" type="TileSet" id=2]
@@ -11,6 +11,9 @@
 [ext_resource path="res://Scripts/Subworld.gd" type="Script" id=9]
 [ext_resource path="res://Scripts/ObjectsNode.gd" type="Script" id=10]
 [ext_resource path="res://Scripts/PortalObjects.gd" type="Script" id=11]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 5 )
 
 [node name="NewWorld" type="Node2D"]
 
@@ -56,15 +59,22 @@ format = 1
 position = Vector2( 300.69, 100.004 )
 
 [node name="Elevator" parent="Objects" instance=ExtResource( 5 )]
-position = Vector2( 404, 84 )
-tile_data = PoolIntArray( 65534, 10, 0, 65535, 10, 65536, 0, 10, 65536, 1, 10, 131072 )
+position = Vector2( 404, 81 )
 speed = 15.0
-
-[node name="CollisionShape2D" parent="Objects/Elevator/DetectionArea" index="0"]
-position = Vector2( -2, -2 )
 
 [node name="Endpoint" type="Position2D" parent="Objects/Elevator"]
 position = Vector2( 0, -48 )
+
+[node name="TileMap" type="TileMap" parent="Objects/Elevator"]
+position = Vector2( -8, 0 )
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 4, 4 )
+format = 1
+tile_data = PoolIntArray( 0, 10, 0, 1, 10, 65536, 2, 10, 65536, 3, 10, 131072 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Objects/Elevator"]
+position = Vector2( 0, -5 )
+shape = SubResource( 1 )
 
 [node name="Fragment" parent="Objects" instance=ExtResource( 6 )]
 position = Vector2( 83, 77 )
