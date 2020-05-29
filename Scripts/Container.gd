@@ -12,12 +12,12 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	call_deferred("load_world_file", world_file)
 	
-func _on_Portal_portal_changed():
+func _on_Portal_portal_changed(prev_position):
 	var portal = dimension_resources.portal
 	if portal != null and portal.radius > 0:
-		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
+		call_deferred("do_portal_tiles", portal.radius, portal.portal_position, prev_position)
 
-func do_portal_tiles(radius, position):
+func prepare_collision_map():
 	var collision_map = dimension_resources.collision_map
 	var overworld_map = dimension_resources.overworld_map
 	var subworld_map = dimension_resources.subworld_map
@@ -31,7 +31,38 @@ func do_portal_tiles(radius, position):
 	var used_rect = overworld_map.get_used_rect()
 	for i in range(used_rect.position.x, used_rect.end.x):
 		for j in range(used_rect.position.y, used_rect.end.y):
-			collision_map.set_cell(i, j, overworld_map.get_cell(i, j))
+			collision_map.set_cell(
+				i,
+				j,
+				overworld_map.get_cell(i, j),
+				overworld_map.is_cell_x_flipped(i, j),
+				overworld_map.is_cell_y_flipped(i, j),
+				overworld_map.is_cell_transposed(i, j),
+				overworld_map.get_cell_autotile_coord(i, j))
+
+func do_portal_tiles(radius, position, prev_position):
+	var collision_map = dimension_resources.collision_map
+	var overworld_map = dimension_resources.overworld_map
+	var subworld_map = dimension_resources.subworld_map
+	
+	if collision_map == null or overworld_map == null or subworld_map == null:
+		print("maps not found!")
+		return
+	
+	var RESET_RADIUS = 30
+	
+	for i in range(prev_position.x - RESET_RADIUS, prev_position.x + RESET_RADIUS, 4):
+		for j in range(prev_position.y - RESET_RADIUS, prev_position.y + RESET_RADIUS, 4):
+			if sq(i - prev_position.x) + sq(j - prev_position.y) <= sq(RESET_RADIUS):
+				var tile_coords = collision_map.world_to_map(Vector2(i,j))
+				collision_map.set_cell(
+					tile_coords.x,
+					tile_coords.y,
+					overworld_map.get_cellv(tile_coords),
+					overworld_map.is_cell_x_flipped(tile_coords.x, tile_coords.y),
+					overworld_map.is_cell_y_flipped(tile_coords.x, tile_coords.y),
+					overworld_map.is_cell_transposed(tile_coords.x, tile_coords.y),
+					overworld_map.get_cell_autotile_coord(tile_coords.x, tile_coords.y))
 	
 	if radius < 4:
 		return
@@ -40,7 +71,14 @@ func do_portal_tiles(radius, position):
 		for j in range(position.y - radius, position.y + radius, 4):
 			if sq(i - position.x) + sq(j - position.y) <= sq(radius):
 				var tile_coords = collision_map.world_to_map(Vector2(i,j))
-				collision_map.set_cellv(tile_coords, subworld_map.get_cellv(tile_coords))
+				collision_map.set_cell(
+					tile_coords.x,
+					tile_coords.y,
+					subworld_map.get_cellv(tile_coords),
+					subworld_map.is_cell_x_flipped(tile_coords.x, tile_coords.y),
+					subworld_map.is_cell_y_flipped(tile_coords.x, tile_coords.y),
+					subworld_map.is_cell_transposed(tile_coords.x, tile_coords.y),
+					subworld_map.get_cell_autotile_coord(tile_coords.x, tile_coords.y))
 	
 	collision_map.update_dirty_quadrants()
 
@@ -75,15 +113,18 @@ func resume():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 func player_died(_area):
-	$MainCamera.set_locked(true)
-	var fade = $GUICanvas/DeathFade
-	fade.fade()
-	
-	yield(fade, "finished")
 	
 	var player = dimension_resources.player
 	var barrel_path = dimension_resources.get_barrel()
 	var barrel = get_tree().get_root().get_node(barrel_path)
+	
+	make_explosion(player.global_position, null)
+	
+	$MainCamera.set_locked(true)
+	var fade = $GUICanvas/DeathFade
+	fade.fade()
+	yield(fade, "finished")
+	
 	
 	if barrel:
 		player.respawn(barrel.get_spawn_position())
@@ -91,7 +132,26 @@ func player_died(_area):
 	$MainCamera.set_locked(false)
 	fade.unfade()
 
-func _on_Fragment_collected():
+func make_explosion(pos : Vector2, follow = null):
+	var Explosion = preload("res://Scenes/PortalExplosion.tscn")
+	var portal_objects = dimension_resources.portal_tree
+	
+	if not Explosion or not portal_objects:
+		return
+	
+	var explosion = Explosion.instance();
+	explosion.global_position = pos
+	if follow is Node2D:
+		explosion.follow_node = weakref(follow)
+	elif follow is Vector2:
+		explosion.follow_position = follow
+	else:
+		explosion.follow_position = pos
+	
+	portal_objects.add_child(explosion)
+
+func _on_Fragment_collected(fragment):
+	make_explosion(fragment.global_position, dimension_resources.player)
 	print("coin noises")
 
 func prepare_objects():
@@ -150,3 +210,4 @@ func load_world_file(file : String):
 	$Objects.add_child(objects)
 	$PortalMaskViewport.add_child(portal_objects)
 	prepare_objects()
+	prepare_collision_map()

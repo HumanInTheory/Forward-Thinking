@@ -1,6 +1,6 @@
 extends Node2D
 
-signal portal_changed
+signal portal_changed(previous_pos)
 
 var dimension_resources = preload("res://Resource/Dimension Resources.tres")
 
@@ -19,23 +19,23 @@ func transition_radius(value : float):
 func set_radius(value : float):
 	radius = value
 	$PortalGraphics.scale = Vector2(radius/25, radius/25)
-	emit_signal("portal_changed")
+	emit_signal("portal_changed", portal_position)
 
 var portal_position : Vector2 setget set_position
 
 func _ready():
 	dimension_resources.portal = self
-
-func _enter_tree():
-	print('lelele')
 	
 func _exit_tree():
 	dimension_resources.portal = null
 
 func set_position(new_pos : Vector2):
-	emit_signal("portal_changed")
+	var prev_pos = portal_position
 	portal_position = new_pos
 	global_position = portal_position
-	trail.scale_amount = radius/25
+	$PortalGraphics/Trail.scale_amount = radius/25
+	
+	emit_signal("portal_changed", prev_pos)
+	
 	trail.one_shot = true
 	trail.emitting = true
