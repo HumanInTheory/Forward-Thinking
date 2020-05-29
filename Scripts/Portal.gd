@@ -8,7 +8,7 @@ onready var trail : CPUParticles2D = $PortalGraphics/Trail
 
 const TWEEN_TIME = 0.5
 
-var radius : float = 25 setget set_radius
+var radius : float = 0 setget set_radius
 
 const COLLISION_RADIUS_BIAS = 5
 

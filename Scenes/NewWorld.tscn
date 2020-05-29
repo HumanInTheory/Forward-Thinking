@@ -21,7 +21,6 @@ extents = Vector2( 8, 5 )
 script = ExtResource( 8 )
 
 [node name="TileMap" type="TileMap" parent="Overworld"]
-visible = false
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 4, 4 )
 format = 1
@@ -31,7 +30,6 @@ tile_data = PoolIntArray( -655223, 8, 0, -655222, 8, 0, -655221, 8, 0, -655220, 
 script = ExtResource( 9 )
 
 [node name="TileMap" type="TileMap" parent="Subworld"]
-visible = false
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 4, 4 )
 format = 1
@@ -51,6 +49,7 @@ current_barrel = true
 position = Vector2( 122, 73 )
 
 [node name="CollisionMap" type="TileMap" parent="Objects"]
+visible = false
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 4, 4 )
 format = 1

@@ -31,7 +31,14 @@ func prepare_collision_map():
 	var used_rect = overworld_map.get_used_rect()
 	for i in range(used_rect.position.x, used_rect.end.x):
 		for j in range(used_rect.position.y, used_rect.end.y):
-			collision_map.set_cell(i, j, overworld_map.get_cell(i, j))
+			collision_map.set_cell(
+				i,
+				j,
+				overworld_map.get_cell(i, j),
+				overworld_map.is_cell_x_flipped(i, j),
+				overworld_map.is_cell_y_flipped(i, j),
+				overworld_map.is_cell_transposed(i, j),
+				overworld_map.get_cell_autotile_coord(i, j))
 
 func do_portal_tiles(radius, position, prev_position):
 	var collision_map = dimension_resources.collision_map
@@ -46,9 +53,15 @@ func do_portal_tiles(radius, position, prev_position):
 	
 	for i in range(prev_position.x - RESET_RADIUS, prev_position.x + RESET_RADIUS, 4):
 		for j in range(prev_position.y - RESET_RADIUS, prev_position.y + RESET_RADIUS, 4):
-			if sq(i - prev_position.x) + sq(j - prev_position.y) <= sq(RESET_RADIUS):
-				var tile_coords = collision_map.world_to_map(Vector2(i,j))
-				collision_map.set_cellv(tile_coords, overworld_map.get_cellv(tile_coords))
+			var tile_coords = collision_map.world_to_map(Vector2(i,j))
+			collision_map.set_cell(
+				tile_coords.x,
+				tile_coords.y,
+				overworld_map.get_cellv(tile_coords),
+				overworld_map.is_cell_x_flipped(tile_coords.x, tile_coords.y),
+				overworld_map.is_cell_y_flipped(tile_coords.x, tile_coords.y),
+				overworld_map.is_cell_transposed(tile_coords.x, tile_coords.y),
+				overworld_map.get_cell_autotile_coord(tile_coords.x, tile_coords.y))
 	
 	if radius < 4:
 		return
@@ -57,7 +70,14 @@ func do_portal_tiles(radius, position, prev_position):
 		for j in range(position.y - radius, position.y + radius, 4):
 			if sq(i - position.x) + sq(j - position.y) <= sq(radius):
 				var tile_coords = collision_map.world_to_map(Vector2(i,j))
-				collision_map.set_cellv(tile_coords, subworld_map.get_cellv(tile_coords))
+				collision_map.set_cell(
+					tile_coords.x,
+					tile_coords.y,
+					subworld_map.get_cellv(tile_coords),
+					subworld_map.is_cell_x_flipped(tile_coords.x, tile_coords.y),
+					subworld_map.is_cell_y_flipped(tile_coords.x, tile_coords.y),
+					subworld_map.is_cell_transposed(tile_coords.x, tile_coords.y),
+					subworld_map.get_cell_autotile_coord(tile_coords.x, tile_coords.y))
 	
 	collision_map.update_dirty_quadrants()
 
