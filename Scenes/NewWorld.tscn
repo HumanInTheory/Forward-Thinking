@@ -21,6 +21,7 @@ extents = Vector2( 8, 5 )
 script = ExtResource( 8 )
 
 [node name="TileMap" type="TileMap" parent="Overworld"]
+visible = false
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 4, 4 )
 format = 1
@@ -50,7 +51,6 @@ current_barrel = true
 position = Vector2( 122, 73 )
 
 [node name="CollisionMap" type="TileMap" parent="Objects"]
-visible = false
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 4, 4 )
 format = 1
