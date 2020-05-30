@@ -33,7 +33,7 @@ func set_position(new_pos : Vector2):
 	var prev_pos = portal_position
 	portal_position = new_pos
 	global_position = portal_position
-	$PortalGraphics/Trail.scale_amount = radius/25
+	$PortalGraphics/Trail.scale_amount = radius/40
 	
 	emit_signal("portal_changed", prev_pos)
 	

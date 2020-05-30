@@ -29,7 +29,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 2.4, 5 ),
 "transitions": PoolRealArray( 5.09824, 1, 1 ),
 "update": 0,
-"values": [ 0.0, 5.0, 0.0 ]
+"values": [ 0.0, 3.0, 0.0 ]
 }
 tracks/2/type = "method"
 tracks/2/path = NodePath("AudioStreamPlayer")
@@ -52,9 +52,9 @@ amount = 63
 local_coords = false
 texture = ExtResource( 2 )
 emission_shape = 1
-emission_sphere_radius = 1.00003
+emission_sphere_radius = 1.0
 gravity = Vector2( 0, 0 )
-scale_amount = 0.0336728
+scale_amount = 9.44488e-06
 scale_amount_curve = ExtResource( 3 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

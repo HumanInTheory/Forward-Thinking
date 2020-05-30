@@ -87,7 +87,7 @@ position = Vector2( 520.768, 81.6037 )
 script = ExtResource( 11 )
 
 [node name="PortalIntroParticles" parent="PortalObjects" instance=ExtResource( 12 )]
-position = Vector2( 93, 59 )
+position = Vector2( 95, 59 )
 
 [node name="Portal" parent="PortalObjects" instance=ExtResource( 7 )]
 
