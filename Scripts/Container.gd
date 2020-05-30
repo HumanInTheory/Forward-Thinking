@@ -118,6 +118,7 @@ func player_died(_area):
 	var barrel = get_tree().get_root().get_node(barrel_path)
 	
 	make_explosion(player.global_position, null)
+	$DeathSound.play()
 	
 	$MainCamera.set_locked(true)
 	var fade = $GUICanvas/DeathFade
@@ -151,7 +152,7 @@ func make_explosion(pos : Vector2, follow = null):
 
 func _on_Fragment_collected(fragment):
 	make_explosion(fragment.global_position, dimension_resources.player)
-	print("coin noises")
+	$PortalSound.play()
 
 func prepare_objects():
 	var player = Player.instance()
