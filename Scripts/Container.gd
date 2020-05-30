@@ -52,8 +52,7 @@ func do_portal_tiles(radius, position, prev_position):
 	var RESET_RADIUS = 30
 	
 	for i in range(prev_position.x - RESET_RADIUS, prev_position.x + RESET_RADIUS, 4):
-		for j in range(prev_position.y - RESET_RADIUS, prev_position.y + RESET_RADIUS, 4):
-			var tile_coords = collision_map.world_to_map(Vector2(i,j))
+		for j in range(prev_position.y - RESET_RADIUS, prev_position.y + RESET_RADIUS, 4):			var tile_coords = collision_map.world_to_map(Vector2(i,j))
 			collision_map.set_cell(
 				tile_coords.x,
 				tile_coords.y,

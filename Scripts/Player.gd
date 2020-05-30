@@ -4,7 +4,7 @@ var dimension_resources = preload("res://Resource/Dimension Resources.tres")
 
 const GRAVITY = 400
 const MAX_SPEED = 60
-const ACCELERATION = 20
+const ACCELERATION = 15
 const JUMP_SPEED = 120
 const FALL_ANIMATION_THRESHOLD = 50
 
