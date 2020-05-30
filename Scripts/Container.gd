@@ -39,6 +39,7 @@ func prepare_collision_map():
 				overworld_map.is_cell_y_flipped(i, j),
 				overworld_map.is_cell_transposed(i, j),
 				overworld_map.get_cell_autotile_coord(i, j))
+	collision_map.call_deferred("update_dirty_quadrants")
 
 func do_portal_tiles(radius, position, prev_position):
 	var collision_map = dimension_resources.collision_map
@@ -168,7 +169,6 @@ func _on_Fragment_collected(fragment):
 
 func prepare_objects():
 	var player = Player.instance()
-	$Objects.add_child(player)
 	
 	var barrel_path = dimension_resources.get_barrel()
 	var barrel = get_tree().get_root().get_node(barrel_path)
@@ -180,6 +180,8 @@ func prepare_objects():
 		else:
 			print("No barrel found!")
 		$MainCamera.set_position_rounded(player.global_position)
+		$ObjectViewport.add_child(player)
+	
 	
 	for fragment in get_tree().get_nodes_in_group("fragments"):
 		fragment.connect("collected", self, "_on_Fragment_collected")
@@ -195,7 +197,7 @@ func load_world_file(file : String):
 	destroy_children($WorldViewport)
 	destroy_children($SubworldViewport)
 	destroy_children($PortalMaskViewport)
-	destroy_children($Objects)
+	destroy_children($ObjectViewport)
 	print("Destroyed nodes")
 	
 	var Scene = load(file) as PackedScene
@@ -214,7 +216,7 @@ func load_world_file(file : String):
 	
 	$WorldViewport.add_child(overworld)
 	$SubworldViewport.add_child(subworld)
-	$Objects.add_child(objects)
+	$ObjectViewport.add_child(objects)
 	$PortalMaskViewport.add_child(portal_objects)
 	prepare_objects()
 	prepare_collision_map()

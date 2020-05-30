@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Textures/Extras/Fog.png" type="Texture" id=1]
-[ext_resource path="res://Scenes/Fog.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/AnimationRandomizer.gd" type="Script" id=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "New Anim"
@@ -22,8 +22,12 @@ tracks/0/keys = {
 
 [node name="Fog" type="Sprite"]
 texture = ExtResource( 1 )
-offset = Vector2( 0.743409, 0 )
+offset = Vector2( -3, 0 )
 script = ExtResource( 2 )
+random_flip_x = true
+random_flip_y = true
+random_rotate = true
+anim = "New Anim"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 "anims/New Anim" = SubResource( 1 )
