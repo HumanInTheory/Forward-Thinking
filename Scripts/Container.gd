@@ -153,6 +153,18 @@ func make_explosion(pos : Vector2, follow = null):
 func _on_Fragment_collected(fragment):
 	make_explosion(fragment.global_position, dimension_resources.player)
 	$PortalSound.play()
+	
+	if dimension_resources.portal == null: #unlock the portal
+		var ExplodeAnimation = preload("res://Scenes/PortalIntroParticles.tscn")
+		var explosion = ExplodeAnimation.instance()
+		explosion.global_position = fragment.global_position
+		var Portal = preload("res://Scenes/Portal.tscn")
+		var portal = Portal.instance()
+		
+		dimension_resources.portal_tree.add_child(portal)
+		dimension_resources.portal_tree.add_child(explosion)
+		portal.connect("portal_changed", self, "_on_Portal_portal_changed")
+		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
 
 func prepare_objects():
 	var player = Player.instance()
@@ -168,11 +180,6 @@ func prepare_objects():
 		else:
 			print("No barrel found!")
 		$MainCamera.set_position_rounded(player.global_position)
-	
-	var portal = dimension_resources.portal
-	if portal != null:
-		portal.connect("portal_changed", self, "_on_Portal_portal_changed")
-		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
 	
 	for fragment in get_tree().get_nodes_in_group("fragments"):
 		fragment.connect("collected", self, "_on_Fragment_collected")
