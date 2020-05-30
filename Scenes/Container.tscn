@@ -15,7 +15,7 @@
 viewport_path = NodePath("CompositedViewport")
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 10, 70 )
+extents = Vector2( 10, 75 )
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 100, 10 )
@@ -125,7 +125,7 @@ __meta__ = {
 [node name="MoveMinusX" type="Area2D" parent="MainCamera" groups=[
 "move_area",
 ]]
-position = Vector2( -14, 54 )
+position = Vector2( -14, 50 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -136,7 +136,7 @@ shape = SubResource( 2 )
 [node name="MovePlusX" type="Area2D" parent="MainCamera" groups=[
 "move_area",
 ]]
-position = Vector2( 206, 54 )
+position = Vector2( 206, 50 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -147,7 +147,7 @@ shape = SubResource( 2 )
 [node name="MoveMinusY" type="Area2D" parent="MainCamera" groups=[
 "move_area",
 ]]
-position = Vector2( 96, -26 )
+position = Vector2( 96, -21 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -253,7 +253,6 @@ anims/Unfade = SubResource( 9 )
 
 [node name="PauseMenu" type="Control" parent="GUICanvas"]
 pause_mode = 2
-visible = false
 margin_right = 192.0
 margin_bottom = 108.0
 script = ExtResource( 7 )
@@ -348,15 +347,17 @@ value = -10.0
 
 [node name="Credits" type="RichTextLabel" parent="GUICanvas/PauseMenu"]
 margin_left = 2.0
-margin_top = 86.0
+margin_top = 77.0
 margin_right = 190.0
 margin_bottom = 106.0
 custom_styles/focus = ExtResource( 1 )
 custom_styles/normal = ExtResource( 1 )
 bbcode_enabled = true
-bbcode_text = "[center]Made by Dude and Guy for
+bbcode_text = "[center]Made by [url={\"url\":\"https://humanintheory.itch.io/\"}]HumanInTheory[/url] and
+ [url={\"url\":\"https://fuzzyzilla.itch.io/\"}]Fuzzyzilla[/url] for
 [url={\"url\":\"https://itch.io/jam/gamedevtv-community-jam\"}]Gamedev.tv Community Jam[/url][/center]"
-text = "Made by Dude and Guy for
+text = "Made by HumanInTheory and
+ Fuzzyzilla for
 Gamedev.tv Community Jam"
 script = ExtResource( 8 )
 __meta__ = {

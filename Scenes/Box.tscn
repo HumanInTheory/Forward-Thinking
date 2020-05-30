@@ -10,7 +10,7 @@ extents = Vector2( 4, 4 )
 [node name="Box" type="RigidBody2D" groups=[
 "player_pushable",
 ]]
-mass = 0.5
+mass = 0.25
 can_sleep = false
 script = ExtResource( 2 )
 __meta__ = {
