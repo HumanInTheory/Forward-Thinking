@@ -11,10 +11,10 @@ uniform sampler2D subworldView;
 bool onMaskOutline(vec2 uv) {
 	vec2 pixelSize = vec2(1.)/viewportSize;
 	bool outline =
-		texture(portalMask, uv + vec2(1.,0.) * pixelSize).a != 0.
-		|| texture(portalMask, uv + vec2(-1.,0.) * pixelSize).a != 0.
-		|| texture(portalMask, uv + vec2(0.,1.) * pixelSize).a != 0.
-		|| texture(portalMask, uv + vec2(0.,-1.) * pixelSize).a != 0.;
+		texture(portalMask, uv + vec2(1.,0.) * pixelSize).a > 0.5
+		|| texture(portalMask, uv + vec2(-1.,0.) * pixelSize).a > 0.5
+		|| texture(portalMask, uv + vec2(0.,1.) * pixelSize).a > 0.5
+		|| texture(portalMask, uv + vec2(0.,-1.) * pixelSize).a > 0.5;
 	return outline;
 }
 
@@ -23,8 +23,8 @@ void fragment() {
 	vec4 subworldColor = texture(subworldView, UV) * subworldModulate;
 	vec4 mask = texture(portalMask, UV);
 	
-	vec4 color = mix(worldColor, subworldColor, mask.a);
-	if(mask.a == 0. && onMaskOutline(UV)) color = vec4(1.);
+	vec4 color = mix(worldColor, subworldColor, mask.a > 0.5 ? 1. : 0.);
+	if(mask.a < 0.5 && onMaskOutline(UV)) color = vec4(1.);
 	
 	COLOR = color;
 }

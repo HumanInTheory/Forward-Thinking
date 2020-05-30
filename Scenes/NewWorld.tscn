@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scenes/DeathArea.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resource/GenericTileset.tres" type="TileSet" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Scripts/Subworld.gd" type="Script" id=9]
 [ext_resource path="res://Scripts/ObjectsNode.gd" type="Script" id=10]
 [ext_resource path="res://Scripts/PortalObjects.gd" type="Script" id=11]
+[ext_resource path="res://Scenes/PortalIntroParticles.tscn" type="PackedScene" id=12]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 8, 5 )
@@ -83,8 +84,10 @@ position = Vector2( 135.874, 76.4866 )
 position = Vector2( 520.768, 81.6037 )
 
 [node name="PortalObjects" type="Node2D" parent="."]
-visible = false
 script = ExtResource( 11 )
+
+[node name="PortalIntroParticles" parent="PortalObjects" instance=ExtResource( 12 )]
+position = Vector2( 93, 59 )
 
 [node name="Portal" parent="PortalObjects" instance=ExtResource( 7 )]
 

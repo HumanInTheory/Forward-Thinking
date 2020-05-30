@@ -2,6 +2,8 @@
 
 [ext_resource path="res://Textures/Circle.png" type="Texture" id=1]
 
+
+
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0.0337553, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.514768, 0.845455 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 

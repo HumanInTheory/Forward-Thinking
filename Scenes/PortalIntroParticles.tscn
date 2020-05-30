@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Textures/Circle.png" type="Texture" id=2]
+[ext_resource path="res://Resource/ParticleScaleCurve.tres" type="Curve" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Intro"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:emission_sphere_radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3.2, 5 ),
+"transitions": PoolRealArray( 12.1257, 1, 1 ),
+"update": 0,
+"values": [ 1.0, 128.0, 128.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:scale_amount")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 2.4, 5 ),
+"transitions": PoolRealArray( 5.09824, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 5.0, 0.0 ]
+}
+
+[node name="PortalIntroParticles" type="CPUParticles2D"]
+position = Vector2( -0.000201853, 0 )
+amount = 63
+local_coords = false
+texture = ExtResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 128.0
+gravity = Vector2( 0, 0 )
+scale_amount = 0.0
+scale_amount_curve = ExtResource( 3 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Intro"
+anims/Intro = SubResource( 1 )
