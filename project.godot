@@ -17,6 +17,7 @@ _global_script_class_icons={
 
 config/name="Forward Thinking"
 run/main_scene="res://Scenes/Container.tscn"
+config/icon="res://Textures/Extras/favicon.png"
 
 [audio]
 
