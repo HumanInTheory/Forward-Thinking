@@ -166,12 +166,11 @@ func _on_Fragment_collected(fragment):
 		portal.connect("portal_changed", self, "_on_Portal_portal_changed")
 		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
 	
-	if fragment.exploding:
-		var ExplodeAnimation = preload("res://Scenes/PortalIntroParticles.tscn")
-		var explosion = ExplodeAnimation.instance()
-		explosion.global_position = fragment.global_position
-		
-		dimension_resources.portal_tree.add_child(explosion)
+	var ExplodeAnimation = preload("res://Scenes/PortalIntroParticles.tscn")
+	var explosion = ExplodeAnimation.instance()
+	explosion.global_position = fragment.global_position
+	
+	dimension_resources.portal_tree.add_child(explosion)
 
 func prepare_objects():
 	var player = Player.instance()
