@@ -2,6 +2,8 @@ extends Area2D
 
 var dimension_resources = preload("res://Resource/Dimension Resources.tres")
 
+export var exploding : bool = false
+
 signal collected(fragment)
 
 func _enter_tree():

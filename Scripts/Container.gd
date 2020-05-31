@@ -7,6 +7,9 @@ export(String, FILE, "*.tscn") var world_file
 
 var sensitivity = 1
 
+var fragmentCount
+var fragmentsCollected = 0
+
 func _ready():
 	#defer loading, tree is locked during _ready
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -152,6 +155,7 @@ func make_explosion(pos : Vector2, follow = null):
 	portal_objects.add_child(explosion)
 
 func _on_Fragment_collected(fragment):
+	fragmentsCollected += 1
 	make_explosion(fragment.global_position, dimension_resources.player)
 	$PortalSound.play()
 	
@@ -161,12 +165,13 @@ func _on_Fragment_collected(fragment):
 		dimension_resources.portal_tree.add_child(portal)
 		portal.connect("portal_changed", self, "_on_Portal_portal_changed")
 		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
-		
-	var ExplodeAnimation = preload("res://Scenes/PortalIntroParticles.tscn")
-	var explosion = ExplodeAnimation.instance()
-	explosion.global_position = fragment.global_position
 	
-	dimension_resources.portal_tree.add_child(explosion)
+	if fragment.exploding:
+		var ExplodeAnimation = preload("res://Scenes/PortalIntroParticles.tscn")
+		var explosion = ExplodeAnimation.instance()
+		explosion.global_position = fragment.global_position
+		
+		dimension_resources.portal_tree.add_child(explosion)
 
 func prepare_objects():
 	var player = Player.instance()
@@ -184,6 +189,7 @@ func prepare_objects():
 		$ObjectViewport.add_child(player)
 	
 	
+	fragmentCount = get_tree().get_nodes_in_group("fragments").size()
 	for fragment in get_tree().get_nodes_in_group("fragments"):
 		fragment.connect("collected", self, "_on_Fragment_collected")
 
