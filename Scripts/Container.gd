@@ -11,6 +11,7 @@ var fragmentCount
 var fragmentsCollected = 0
 
 func _ready():
+	$GUICanvas/DeathFade.unfade(10.0)
 	#defer loading, tree is locked during _ready
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	call_deferred("load_world_file", world_file)
