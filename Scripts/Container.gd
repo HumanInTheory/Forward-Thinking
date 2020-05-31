@@ -11,6 +11,7 @@ var fragmentCount
 var fragmentsCollected = 0
 
 func _ready():
+	$GUICanvas/DeathFade.unfade(10.0)
 	#defer loading, tree is locked during _ready
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	call_deferred("load_world_file", world_file)
@@ -166,12 +167,11 @@ func _on_Fragment_collected(fragment):
 		portal.connect("portal_changed", self, "_on_Portal_portal_changed")
 		call_deferred("do_portal_tiles", portal.radius, portal.portal_position)
 	
-	if fragment.exploding:
-		var ExplodeAnimation = preload("res://Scenes/PortalIntroParticles.tscn")
-		var explosion = ExplodeAnimation.instance()
-		explosion.global_position = fragment.global_position
-		
-		dimension_resources.portal_tree.add_child(explosion)
+	var ExplodeAnimation = preload("res://Scenes/PortalIntroParticles.tscn")
+	var explosion = ExplodeAnimation.instance()
+	explosion.global_position = fragment.global_position
+	
+	dimension_resources.portal_tree.add_child(explosion)
 
 func prepare_objects():
 	var player = Player.instance()
