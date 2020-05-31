@@ -14,6 +14,8 @@ var portal : Node2D
 var player : Node2D
 var portal_tree : Node2D
 
+var fragment_counter : Label
+
 func set_barrel(value : Node2D):
 	barrel_path = value.get_path()
 	print("Barrel get! %s" % barrel_path)

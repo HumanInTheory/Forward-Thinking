@@ -157,6 +157,9 @@ func make_explosion(pos : Vector2, follow = null):
 
 func _on_Fragment_collected(fragment):
 	fragmentsCollected += 1
+	var fragment_label = dimension_resources.fragment_counter
+	fragment_label.text = "%d/%d" % [fragmentsCollected, fragmentCount]
+	
 	make_explosion(fragment.global_position, dimension_resources.player)
 	$PortalSound.play()
 	

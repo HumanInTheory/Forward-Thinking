@@ -1,8 +1,9 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Textures/Circle.png" type="Texture" id=1]
-[ext_resource path="res://Scenes/PortalExplosion.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/PortalExplosion.gd" type="Script" id=2]
 [ext_resource path="res://Resource/ParticleScaleCurve.tres" type="Curve" id=3]
+
 
 [node name="PortalExplosion" type="CPUParticles2D"]
 emitting = false
