@@ -13,7 +13,7 @@ var fragmentsCollected = 0
 func _ready():
 	$GUICanvas/DeathFade.unfade(10.0)
 	#defer loading, tree is locked during _ready
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	call_deferred("resume") # workaround to force capture in HTML5 embed
 	call_deferred("load_world_file", world_file)
 	
 func _on_Portal_portal_changed(prev_position):
@@ -100,10 +100,11 @@ func _input(event):
 			
 			portal.portal_position = new_pos
 	elif event is InputEventMouseButton:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		var portal = dimension_resources.portal
 		if portal:
 			portal.transition_radius(25 if event.pressed else 0)
-	if Input.is_action_just_pressed("exit"):
+	if event.is_action_pressed("exit"):
 		pause()
 
 func pause():
